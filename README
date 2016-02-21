@@ -21,6 +21,8 @@ The play function play one of the 8 channels, and a function enables to know wha
 
 The exemples files are no more good, as I didn't modify them. Anyway, their probably can be used with small modifications, like change library calling, names and which arguments are used in function callings.
 
+The code has been commented, so I hope that the time I spent understanding how this library works will enable you to understand a lot faster!
+
 Before-fork version:
 This is a simple to use 4 polyphonic wavetable synthesizer library for Arduino.
 
