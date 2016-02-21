@@ -13,7 +13,7 @@ It uses the atmege 32u4 timer 4, that have high speed capabilities, of the 32u4 
 Some functions have been removed, that I didn't needed, or that I needed to implement another way (the modulation engine is de-implemented).
 Others have been added.
 
-The number of channels (not the right/left channels, buttoses used by the audio mixer to generate the sound) has been ported to 8.
+The number of channels (not the right/left channels, but those used by the audio mixer to generate the sound) has been ported to 8.
 
 Each note is set to a dedicated channel by a MIDI pitch (0-127, C3 beeing 69), waveform, enveloppe and length.
 
