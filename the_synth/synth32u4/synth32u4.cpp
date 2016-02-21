@@ -139,6 +139,23 @@ void synth::begin(void){
 
 	cli();										// cancels interrupt durring setting up
 
+/*
+ * arduino uno / nano / mini / Atmega 238
+ * uncomment the following lines and comment the PLL/TIMER4 lines to use with a regular arduino board
+ * TIMER 2 setting (fast PWM, frequency generating)
+*/
+/*
+	Timer2 fast PWM, OC2A and OC2B pins clear on match, set on bottom
+	TCCR2A=B10100011;							// TIMER 2 fast pwm, OC2A and OC2B clear on match, set on bottom
+	TCCR2B=B00000001;							// TIMER 2 no prescalling
+
+	OCR2A=127;									// Initial value on A comparator
+	OCR2B=127;									// ditto B
+
+	bitSet(DDRB, 3);							// OC2A / PORTB3 / pin 11
+	bitSet(DDRD, 3);							// OC2B / PORTD3 / pin 3
+*/
+	
 	PLLCSR=B00010010;							// PLL prescaller setting. See Atmel atmega 32u4 doc, chapter 6.10
 	delay(10);
 	PLLCSR=B00010011;
@@ -163,6 +180,7 @@ void synth::begin(void){
 	TCNT1=0;									// Zeroing the counter
 	TCCR1A=B00000000;							// Timer 1 CTC mode (defined by TCCR1A and TCCR1B)
 	TCCR1B=B00001001;							// Timer 1 CTC, no prescaling
+	TCCR1C=B00000000;
 	OCR1A=CPUFrq/samplingFrq;					// valeur de tick // echantillonage de 22050Hz avec l'horloge de 16MHz.
 	TIMSK1 |= (1 << OCIE1A);					// TIMER 1 enable the compare A match interrupt
 
