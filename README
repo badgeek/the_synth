@@ -1,3 +1,27 @@
+Forked:
+this is a port of the synth library to the arduino micro (Atmel atmega 32u4)
+
+Some modification have been made to suits my needs: The goal is to build an monome-like music instrument using adafruit trellis, that is self-sufficient (no need of a software to use it like the real monome, neither a MIDI instrument like the adafruit trellis).
+
+The layout has been changed, to (try to) stick to C way of doing: it has now tree files:
+-synth32u4.h (var and func declaration)
+-synth32u4.c (functions)
+-synth32u4tables.h (tables)
+
+It uses the atmege 32u4 timer 4, that have high speed capabilities, of the 32u4 to generate waveforms. It also uses the PLL prescaller to compute the wave form at a higher frequence.
+
+Some functions have been removed, that I didn't needed, or that I needed to implement another way (the modulation engine is de-implemented).
+Others have been added.
+
+The number of channels (not the right/left channels, buttoses used by the audio mixer to generate the sound) has been ported to 8.
+
+Each note is set to a dedicated channel by a MIDI pitch (0-127, C3 beeing 69), waveform, enveloppe and length.
+
+The play function play one of the 8 channels, and a function enables to know what is the last channel that was played. This way, a note that is beeing played can be played again, without "cutting" the first one
+
+The exemples files are no more good, as I didn't modify them. Anyway, their probably can be used with small modifications, like change library calling, names and which arguments are used in function callings.
+
+Before-fork version:
 This is a simple to use 4 polyphonic wavetable synthesizer library for Arduino.
 
 Specs:
