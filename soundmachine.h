@@ -19,30 +19,46 @@
  * methods declaration
  */
 
-#ifndef synth_h
-#define synth_h
+#ifndef SoundMachine_H
+#define SoundMachine_H
 
-#include <arduino.h>
+#include <Arduino.h>
+#include <avr/pgmspace.h>
+#include "tables.h"
 
-class synth{
+#define F_CPU               16000000
+#define SAMPLING            16000       //22050
+#define F_A                 440
+
+#define CHANNELS            8
+
+#define SIN                 0                                   
+#define TRI                 1
+#define SQUARE              2
+#define SAW                 3
+#define NOISE               4
+
+class SoundMachine{
   public:
-    synth();
+    SoundMachine();
+
     void begin(void);
+
+    int update(void);
+
     void setVoice(unsigned char i, unsigned char wave, unsigned char pitch, unsigned char env, unsigned char length);
     void play(unsigned char i);
     unsigned char getNextPlay(void);
     unsigned char getNextChannel(void);
     boolean pause(void);
- /*   boolean pulseBpm(void);
-    unsigned char getBpm(void);
-    unsigned char setBpm(unsigned char bpmToSet);
-*/
 
-private:
-    void setWave(unsigned char i, unsigned char wave);
-    void setPitch(unsigned char i, unsigned char pitch);
-    void setEnv(unsigned char i, unsigned char env);
-    void setLength(unsigned char i, unsigned char length);
+protected:
+    void _isrInit(void);
+    void _bufferInit(void);
+    void _setWave(unsigned char i, unsigned char wave);
+    void _setPitch(unsigned char i, unsigned char pitch);
+    void _setEnv(unsigned char i, unsigned char env);
+    void _setLength(unsigned char i, unsigned char length);
 };
 
 #endif
