@@ -24,11 +24,14 @@
 
 #include <Arduino.h>
 #include <avr/pgmspace.h>
-#include "tables.h"
 
-#define F_CPU               16000000
-#define SAMPLING            16000       //22050
+#define CPU                 16000000
+#define SAMPLING            20000       //22050, 20000, 16000 or 11025
 #define F_A                 440
+
+//We need the SAMPLING value to be defined in order to set the right tables
+//So tables must be included now.
+#include "tables.h"
 
 #define CHANNELS            8
 
@@ -48,9 +51,16 @@ class SoundMachine{
 
     void setVoice(unsigned char i, unsigned char wave, unsigned char pitch, unsigned char env, unsigned char length);
     void play(unsigned char i);
+    unsigned char play(unsigned char wave, unsigned char pitch, unsigned char env, unsigned char length);
+    void stop(unsigned char i);
     unsigned char getNextPlay(void);
     unsigned char getNextChannel(void);
     boolean pause(void);
+    void setBpm(unsigned char);
+    unsigned char getBpm(void);
+    bool getTick(void);
+    void setSignature(unsigned char);
+    bool getTime(void);
 
 protected:
     void _isrInit(void);
@@ -59,6 +69,8 @@ protected:
     void _setPitch(unsigned char i, unsigned char pitch);
     void _setEnv(unsigned char i, unsigned char env);
     void _setLength(unsigned char i, unsigned char length);
+
+    unsigned char bpm;
 };
 
 #endif
