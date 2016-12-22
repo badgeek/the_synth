@@ -37,12 +37,12 @@ ISR(TIMER1_COMPA_vect){
 	//Increment tick counts
 	//if top is reached, set back to 0, set a flag (tick) and increment bpm count
 	tickCount++;
-	if(tickCount == tickTop){
+	if(tickCount >= tickTop){
 		tickCount = 0;
 		tick = true;
 		bpmCount++;
 		//if top is reached, set back to 0 and set a flag (tickBpm)
-		if(bpmCount == bpmTop){
+		if(bpmCount >= bpmTop){
 			bpmCount = 0;
 			tickBpm = true;
 		}
@@ -55,7 +55,7 @@ ISR(TIMER1_COMPA_vect){
 	//It gives a bit more room for other things to happend between two ISR.
 
 	if(!((envAcc[current]) & 0x8000)){			// 0x8000 is 128 (the enveloppe tables length) multiplied by 256 (fix point math)
-		waveAmp[current] = pgm_read_byte(env[current] + ((envAcc[current] += envTune[current])) / 1024);
+		waveAmp[current] = pgm_read_byte(env[current] + (envAcc[current] += envTune[current]) / 256);
 	} else {
 		waveAmp[current] = 0;				// if the envAcc overlaps the enveloppe table lenght, then volume is set to 0.
 	}
@@ -336,17 +336,17 @@ boolean SoundMachine::pause(void){
 
 //Set the bpm wanted. Under the hood, it sets a tick as in MIDI, that fires 24 times per quarter note.
 void SoundMachine::setBpm(unsigned char _bpm){
-	if (_bpm > 239){
-		bpm=239;
-	} else if (_bpm < 20){
+	bpm = _bpm;
+	if (bpm > 239){
+		bpm = 239;
+	} else if (bpm < 20){
 		bpm = 20;
 	}
-	bpm = _bpm;
 	tickTop = pgm_read_word(tickBPM + (bpm - 20));
-	tickCount = 0;
+//	tickCount = 0;
 	tick = false;
 
-	bpmCount = 0;
+//	bpmCount = 0;
 
 }
 
@@ -380,8 +380,12 @@ void SoundMachine::setSignature(unsigned char _sign){
 
 }
 
+unsigned char SoundMachine::getSignature(){
+	return 96 / bpmTop;
+}
+
 //Get a metronome time. Must be polled on a regluar basis
-bool SoundMachine::getTime(){
+bool SoundMachine::getBeat(){
 	if (tickBpm == false){
 		return false;
 	} else {

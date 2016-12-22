@@ -60,7 +60,8 @@ class SoundMachine{
     unsigned char getBpm(void);
     bool getTick(void);
     void setSignature(unsigned char);
-    bool getTime(void);
+    unsigned char getSignature();
+    bool getBeat(void);
 
 protected:
     void _isrInit(void);
