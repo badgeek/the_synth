@@ -31,7 +31,7 @@
 
 //We need the SAMPLING value to be defined in order to set the right tables
 //So tables must be included now.
-#include "tables.h"
+#include "tables256.h"
 
 #define CHANNELS            8
 

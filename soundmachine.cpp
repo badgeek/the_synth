@@ -60,23 +60,20 @@ ISR(TIMER1_COMPA_vect){
 		waveAmp[current] = 0;				// if the envAcc overlaps the enveloppe table lenght, then volume is set to 0.
 	}
 
+	int output = 127;
+	for(byte i = 0; i < CHANNELS; i++){
+		waveAcc[i] += waveTune[i];
+//		waveAcc[i] &= TABLE_SIZE;
+		output += ((char)pgm_read_byte((char*)(wave[i] + (waveAcc[i] >> TABLE_DIV))) * waveAmp[i]) >> 8;
+
+	}
 	//Timer that drives PWM on output pin is not the same on Arduino Uno and leonardo/micro.
 	#if defined(__AVR_ATmega32U4__)
-	OCR4A = OCR4B = 127 +
+	OCR4A = OCR4B =
 	#else
-	OCR2A = 127 +
+	OCR2A =
 	#endif
-	//Here each channels are added to compute the value of the PWM output pin
-	(
-	(((char)pgm_read_byte(wave[0] + ((unsigned char*)&(waveAcc[0] += waveTune[0]))[1]) * waveAmp[0]) >> 8) +
-	(((char)pgm_read_byte(wave[1] + ((unsigned char*)&(waveAcc[1] += waveTune[1]))[1]) * waveAmp[1]) >> 8) +
-	(((char)pgm_read_byte(wave[2] + ((unsigned char*)&(waveAcc[2] += waveTune[2]))[1]) * waveAmp[2]) >> 8) +
-	(((char)pgm_read_byte(wave[3] + ((unsigned char*)&(waveAcc[3] += waveTune[3]))[1]) * waveAmp[3]) >> 8) +
-	(((char)pgm_read_byte(wave[4] + ((unsigned char*)&(waveAcc[4] += waveTune[4]))[1]) * waveAmp[4]) >> 8) +
-	(((char)pgm_read_byte(wave[5] + ((unsigned char*)&(waveAcc[5] += waveTune[5]))[1]) * waveAmp[5]) >> 8) +
-	(((char)pgm_read_byte(wave[6] + ((unsigned char*)&(waveAcc[6] += waveTune[6]))[1]) * waveAmp[6]) >> 8) +
-	(((char)pgm_read_byte(wave[7] + ((unsigned char*)&(waveAcc[7] += waveTune[7]))[1]) * waveAmp[7]) >> 8)
-	) / 4;
+	output / 4;
 
 }
 
